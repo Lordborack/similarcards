@@ -129,88 +129,88 @@ def normalize(x):
 def doc_embeddings_min_max(doc, embeddings_index):
     embedding_dim = len(embeddings_index['1'])
 
-  w_max_embeddings = -float("inf")*np.ones((1,embedding_dim))
-  w_min_embeddings = float("inf")*np.ones((1,embedding_dim))  
-  tokens = [i for i in doc if i in embeddings_index]
+    w_max_embeddings = -float("inf")*np.ones((1,embedding_dim))
+    w_min_embeddings = float("inf")*np.ones((1,embedding_dim))  
+    tokens = [i for i in doc if i in embeddings_index]
 
-  for word in tokens:
-    w_embedding = embeddings_index[word]
-    w_max_embeddings = np.maximum(w_embedding.astype(float), w_max_embeddings)
-    w_min_embeddings = np.minimum(w_embedding.astype(float), w_max_embeddings)
+    for word in tokens:
+        w_embedding = embeddings_index[word]
+        w_max_embeddings = np.maximum(w_embedding.astype(float), w_max_embeddings)
+        w_min_embeddings = np.minimum(w_embedding.astype(float), w_max_embeddings)
 
-  w_min_max_embeddings = np.concatenate([w_min_embeddings, w_max_embeddings], axis = 1).flatten()
-  return normalize(w_min_max_embeddings)
+    w_min_max_embeddings = np.concatenate([w_min_embeddings, w_max_embeddings], axis = 1).flatten()
+    return normalize(w_min_max_embeddings)
 
 def tokenizize_and_clean(sentence):
-  stop_words = set(stopwords.words('english')) 
-  word_tokens = word_tokenize(sentence)
-  filtered_sentence = [w.lower() for w in word_tokens if (not w in stop_words) and w.isalpha()] 
-  return filtered_sentence
+    stop_words = set(stopwords.words('english')) 
+    word_tokens = word_tokenize(sentence)
+    filtered_sentence = [w.lower() for w in word_tokens if (not w in stop_words) and w.isalpha()] 
+    return filtered_sentence
 
 def glove_min_max_sentence_embeddings(cards):
-  cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
-  cards_clean_embedding = [doc_embeddings_min_max(s, glove_embeddings) for s in cards_clean]
-  return (cards_clean_embedding)
+    cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
+    cards_clean_embedding = [doc_embeddings_min_max(s, glove_embeddings) for s in cards_clean]
+    return (cards_clean_embedding)
 
 def word2vec_ifdf_sentence_embeddings(cards):
-   cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
-   cards_clean_embedding = [doc_embeddings_weighted_average(s, word2vec_embeddings) for s in cards_clean]
-   return (cards_clean_embedding)
+    cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
+    cards_clean_embedding = [doc_embeddings_weighted_average(s, word2vec_embeddings) for s in cards_clean]
+    return (cards_clean_embedding)
 
 def word2vec_min_max_sentence_embeddings(cards):
-   cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
-   cards_clean_embedding = [doc_embeddings_min_max(s, word2vec_embeddings) for s in cards_clean]
-   return (cards_clean_embedding)
+    cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
+    cards_clean_embedding = [doc_embeddings_min_max(s, word2vec_embeddings) for s in cards_clean]
+    return (cards_clean_embedding)
 
 def glove_ifdf_sentence_embeddings(cards): 
-  cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
-  cards_clean_embedding = [doc_embeddings_weighted_average(s, glove_embeddings) for s in cards_clean]
-  return (cards_clean_embedding)
+    cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
+    cards_clean_embedding = [doc_embeddings_weighted_average(s, glove_embeddings) for s in cards_clean]
+    return (cards_clean_embedding)
 
 def fastext_ifdf_sentence_embeddings(cards): 
-  cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
-  cards_clean_embedding = [doc_embeddings_weighted_average(s, fastext_embeddings) for s in cards_clean]
-  return (cards_clean_embedding)
+    cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
+    cards_clean_embedding = [doc_embeddings_weighted_average(s, fastext_embeddings) for s in cards_clean]
+    return (cards_clean_embedding)
 
 def fastext_min_max_sentence_embeddings(cards): 
-  cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
-  cards_clean_embedding = [doc_embeddings_min_max(s, fastext_embeddings) for s in cards_clean]
-  return (cards_clean_embedding)
+    cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
+    cards_clean_embedding = [doc_embeddings_min_max(s, fastext_embeddings) for s in cards_clean]
+    return (cards_clean_embedding)
 
 def doc2vec_embeddings(cards):
-  cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
-  cards_clean_embedding = [doc2vecSelfTrainedModel.infer_vector(s) for s in cards_clean]
-  return (cards_clean_embedding)
+    cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
+    cards_clean_embedding = [doc2vecSelfTrainedModel.infer_vector(s) for s in cards_clean]
+    return (cards_clean_embedding)
 
 def bert_embeddings(cards):
-  cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
-  cards_clean_single_string = [" ".join(s) for s in cards_clean ]
-  cards_clean_embedding = bert_se.encode(cards_clean_single_string, as_numpy = True)
-  return (cards_clean_embedding)
+    cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
+    cards_clean_single_string = [" ".join(s) for s in cards_clean ]
+    cards_clean_embedding = bert_se.encode(cards_clean_single_string, as_numpy = True)
+    return (cards_clean_embedding)
 
 def sbert_nli_mean_embeddings(cards):
-  cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
-  cards_clean_single_string = [" ".join(s) for s in cards_clean ]
-  cards_clean_embedding = sbert.encode(cards_clean_single_string) 
-  return (cards_clean_embedding)
+    cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
+    cards_clean_single_string = [" ".join(s) for s in cards_clean ]
+    cards_clean_embedding = sbert.encode(cards_clean_single_string) 
+    return (cards_clean_embedding)
 
 def robert_nli_stsb_mean_embeddings(cards):
-  cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
-  cards_clean_single_string = [" ".join(s) for s in cards_clean ]
-  cards_clean_embedding = robert_model.encode(cards_clean_single_string) 
-  return (cards_clean_embedding) 
+    cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
+    cards_clean_single_string = [" ".join(s) for s in cards_clean ]
+    cards_clean_embedding = robert_model.encode(cards_clean_single_string) 
+    return (cards_clean_embedding) 
 
 def sbert_base_uncased_fine_tunned_embeddings(cards):
-  cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
-  cards_clean_single_string = [" ".join(s) for s in cards_clean ]
-  cards_clean_embedding = sbert_base_uncased_fine_tunned.encode(cards_clean_single_string) 
-  return (cards_clean_embedding)
+    cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
+    cards_clean_single_string = [" ".join(s) for s in cards_clean ]
+    cards_clean_embedding = sbert_base_uncased_fine_tunned.encode(cards_clean_single_string) 
+    return (cards_clean_embedding)
 
 def robert_fine_tunned_embeddings(cards):
-  cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
-  cards_clean_single_string = [" ".join(s) for s in cards_clean ]
-  cards_clean_embedding = robert_fine_tunned.encode(cards_clean_single_string) 
-  return (cards_clean_embedding)
+    cards_clean = [tokenizize_and_clean(s) for s in cards['Description_clean'] ]
+    cards_clean_single_string = [" ".join(s) for s in cards_clean ]
+    cards_clean_embedding = robert_fine_tunned.encode(cards_clean_single_string) 
+    return (cards_clean_embedding)
 
 def rand_embeddings_lowerbound(cards):
   return (np.random.rand(cards.shape[0],100))
@@ -227,42 +227,41 @@ embeddings_dispatcher = {   "GLOVE_MIN_MAX" : glove_min_max_sentence_embeddings
                             ,"ROBERT_NLI_STSB_MEAN": robert_nli_stsb_mean_embeddings
                             ,"BERT_UNCASED_FINE_TUNED": sbert_base_uncased_fine_tunned_embeddings
                             ,"ROBERT_FINE_TUNED": robert_fine_tunned_embeddings
-                            ,"RAND":rand_embeddings_lowerbound
-                         }
+                            ,"RAND":rand_embeddings_lowerbound}
 
 
 def model_name():
-  return(MODELS_PATH+EMBEDDINGDS+"_KNN_Model.pkl")
+    return(MODELS_PATH+EMBEDDINGDS+"_KNN_Model.pkl")
 
 def deck_name():
-  return(MODELS_PATH+EMBEDDINGDS+"_deck.pkl")  
+    return(MODELS_PATH+EMBEDDINGDS+"_deck.pkl")  
 
 def generate_and_store_knn_model():
-  deck = generate_card_embeddings_deck(cards)
-  nbrsModel = knn_model(deck)
-  joblib_file =  model_name()
-  joblib.dump(nbrsModel, joblib_file)
+    deck = generate_card_embeddings_deck(cards)
+    nbrsModel = knn_model(deck)
+    joblib_file =  model_name()
+    joblib.dump(nbrsModel, joblib_file)
 
-  joblib_file = deck_name() 
-  joblib.dump(deck, joblib_file)
+    joblib_file = deck_name() 
+    joblib.dump(deck, joblib_file)
 
 
 def load_model():
-  return(joblib.load(model_name()))
+    return(joblib.load(model_name()))
 
 def load_deck():
-  return(joblib.load(deck_name()))
+    return(joblib.load(deck_name()))
 
 def generate_card_embeddings_deck(cards):
 
-  emb = embeddings_dispatcher[EMBEDDINGDS]
-  cards_embedding = emb(cards)
-  deck = {}
-  i = 0
-  for number in cards['Number']: 
-    deck[number] = cards_embedding[i]
-    i=i+1
-  return(deck)
+    emb = embeddings_dispatcher[EMBEDDINGDS]
+    cards_embedding = emb(cards)
+    deck = {}
+    i = 0
+    for number in cards['Number']: 
+        deck[number] = cards_embedding[i]
+        i=i+1
+    return(deck)
 
 def knn_model(deck):
     nbrs = NearestNeighbors(n_neighbors = N_NEIGHBORS + 1, algorithm = 'ball_tree').fit(np.array(list(deck.values())))
@@ -277,8 +276,8 @@ def knn_similarity(id):
 
     i = 0
     for key in similarids[similarids!=id]:
-      similarity[key]= 1/(1 + distance[i])
-      i = i +1
+        similarity[key]= 1/(1 + distance[i])
+        i = i +1
 
     return(similarity)
 
@@ -289,9 +288,9 @@ def brute_force_cosine_similarity(id):
     keys = keys[keys!=id]
 
     for key in keys:
-      cardEmbedding2 = deck.get(key)
-      similarity = cosine_similarity(cardEmbedding.reshape(1, -1), cardEmbedding2.reshape(1, -1))
-      deckSimilarity[key] = similarity.item()
+        cardEmbedding2 = deck.get(key)
+        similarity = cosine_similarity(cardEmbedding.reshape(1, -1), cardEmbedding2.reshape(1, -1))
+        deckSimilarity[key] = similarity.item()
 
     res = dict(sorted(deckSimilarity.items(), key = itemgetter(1), reverse = True)[:N_NEIGHBORS]) 
     return(res)
