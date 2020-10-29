@@ -10,5 +10,6 @@
         "PYTHONPATH": "${workspaceFolder}/src",
     },
     "python.envFile": "${workspaceFolder}/.env",
-    "python.pythonPath": "/usr/local/anaconda3/bin/python"
+    "python.pythonPath": "test.venv/bin/python",
+    "git.ignoreLimitWarning": true
 }
