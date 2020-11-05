@@ -3,7 +3,7 @@ import pandas as pd
 import re
 
 
-def clean_description(text):
+#def clean_description(text):
     text = re.sub('[Mm]ag[Cc]hannel', 'Magical Channel', text)
     text = re.sub('\:dfDodge\:','Dodge', text)
     text = re.sub('[Ee]rrata update', '', text)

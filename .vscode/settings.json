@@ -11,5 +11,6 @@
     },
     "python.envFile": "${workspaceFolder}/.env",
     "python.pythonPath": "test.venv/bin/python",
-    "git.ignoreLimitWarning": true
+    "git.ignoreLimitWarning": true,
+    "python.dataScience.jupyterServerURI": "local"
 }
